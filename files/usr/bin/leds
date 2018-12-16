@@ -1,0 +1,99 @@
+#!/bin/sh
+
+ledsdir=/sys/class/leds/
+
+button=c2600:white:general
+power=c2600:white:power
+wifi1=ath10k-phy1
+wifi2=ath10k-phy0
+wan1=c2600:white:wan
+wan2=c2600:amber:wan
+lan=c2600:white:lan
+wps=c2600:white:wps
+usb1=c2600:white:usb_2
+usb2=c2600:white:usb_4
+
+leds_on() {
+	echo 255 > ${ledsdir}${button}/brightness
+	echo 255 > ${ledsdir}${power}/brightness
+	echo phy1tpt > ${ledsdir}${wifi1}/trigger
+	echo phy0tpt > ${ledsdir}${wifi2}/trigger
+	echo switch0 > ${ledsdir}${wan1}/trigger
+	echo 0x20 > ${ledsdir}${wan1}/port_mask
+	echo switch0 > ${ledsdir}${lan}/trigger
+	echo 0x1e > ${ledsdir}${lan}/port_mask
+	echo usbport > ${ledsdir}${usb1}/trigger
+	echo usbport > ${ledsdir}${usb2}/trigger
+	echo 1 > ${ledsdir}${usb1}/ports/usb1-port1
+	echo 1 > ${ledsdir}${usb1}/ports/usb2-port1
+	echo 1 > ${ledsdir}${usb2}/ports/usb3-port1
+	echo 1 > ${ledsdir}${usb2}/ports/usb4-port1
+}
+
+leds_off() {
+	echo 0 > ${ledsdir}${button}/brightness
+	echo 0 > ${ledsdir}${power}/brightness
+	echo 0 > ${ledsdir}${wifi1}/brightness
+	echo 0 > ${ledsdir}${wifi2}/brightness
+	echo 0 > ${ledsdir}${wan1}/brightness
+	echo 0 > ${ledsdir}${wan2}/brightness
+	echo 0 > ${ledsdir}${lan}/brightness
+#	echo 0 > ${ledsdir}${wps}/brightness
+	echo 0 > ${ledsdir}${usb1}/brightness
+	echo 0 > ${ledsdir}${usb2}/brightness
+}
+
+wan_white() {
+	echo 0 > ${ledsdir}${wan2}/brightness
+	echo switch0 > ${ledsdir}${wan1}/trigger
+	echo 0x20 > ${ledsdir}${wan1}/port_mask
+}
+
+wan_amber() {
+	echo 0 > ${ledsdir}${wan1}/brightness
+	echo switch0 > ${ledsdir}${wan2}/trigger
+	echo 0x20 > ${ledsdir}${wan2}/port_mask
+}
+
+wan_pink() {
+	echo switch0 > ${ledsdir}${wan1}/trigger
+	echo 0x20 > ${ledsdir}${wan1}/port_mask
+	echo switch0 > ${ledsdir}${wan2}/trigger
+	echo 0x20 > ${ledsdir}${wan2}/port_mask
+}
+
+leds_usage() {
+	echo "Usage: leds [on|off|toggle]"
+	echo "       leds wan [white|amber|pink]"
+}
+
+case $1 in
+	on)
+		leds_on
+		;;
+	off)
+		leds_off
+		;;
+	toggle)
+		state=`cat ${ledsdir}${power}/brightness`
+		if [ $state = 0 ]; then
+			leds_on
+		else
+			leds_off
+		fi
+		;;
+	wan)
+		if [ "$2" = "white" ]; then
+			wan_white
+		elif [ "$2" = "amber" ]; then
+			wan_amber
+		elif [ "$2" = "pink" ]; then
+			wan_pink
+		else
+			leds_usage
+		fi
+		;;
+	*)
+		leds_usage
+		;;
+esac

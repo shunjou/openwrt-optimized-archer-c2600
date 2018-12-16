@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ "$BUTTON" = "lights_toggle" ]; then
+	case "$ACTION" in
+		pressed)
+			/usr/bin/leds toggle
+			return 2
+			;;
+		timeout)
+			/usr/bin/leds wan amber
+			;;
+		released)
+			[ $SEEN -ge 4 ] && /usr/bin/leds wan pink
+			;;
+	esac
+fi
+
+return 0
