@@ -6,8 +6,8 @@
 /etc/init.d/nfsd stop &>/dev/null
 
 # Scan with radios to determine noise to fix signal icons in luci
-timeout -t 1 iwinfo wlan0 scan &
-timeout -t 1 iwinfo wlan1 scan &
+timeout 1 iwinfo wlan0 scan &
+timeout 1 iwinfo wlan1 scan &
 
 # Turn on button LED
 echo 255 > /sys/class/leds/c2600:white:general/brightness
