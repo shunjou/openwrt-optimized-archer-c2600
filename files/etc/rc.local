@@ -1,10 +1,6 @@
 # Put your custom commands here that should be executed once
 # the system init finished. By default this file does nothing.
 
-# Disable nfsd by default
-/etc/init.d/nfsd disable
-/etc/init.d/nfsd stop &>/dev/null
-
 # Scan with radios to determine noise to fix signal icons in luci
 timeout 1 iwinfo wlan0 scan &
 timeout 1 iwinfo wlan1 scan &

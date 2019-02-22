@@ -3,6 +3,7 @@
 008-generic-kernel-options.patch
 008-remove-kernel-debug.patch
 014-ath10k-firmware.patch
+014-ath10k-improve-tx-rate.patch
 015-wireless-regdb.patch
 016-enable-wireless-default.patch
 043-musl-enable-visibility-pic.patch
