@@ -1,5 +1,4 @@
 002-add-prompt-color.patch
-002-remove-linksys-init.patch
 008-generic-kernel-options.patch
 008-remove-kernel-debug.patch
 014-ath10k-firmware.patch
